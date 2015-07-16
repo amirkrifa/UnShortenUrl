@@ -32,6 +32,11 @@ class UnShortenUrl:
             logging.info('Response status: %d'%response.status)
             if response.status/100 == 3 and response.getheader('Location'):
                 red_url = response.getheader('Location')
+                if red_url.startswith('/'):
+                    logging.info('Adding scheme and netloc to the red url')
+                    import urlparse
+                    parsed_prev_url = urlparse.urlparse(previous_url)
+                    red_url = '%s://%s%s'%(parsed_prev_url.scheme, parsed_prev_url.netloc, red_url)
                 logging.info('Red, previous: %s, %s'%(red_url, previous_url))
                 if red_url == previous_url:
                     return red_url
