@@ -19,16 +19,17 @@ class UnShortenUrl:
             resource = parsed.path
             if parsed.query != "": 
                 resource += "?" + parsed.query
-            h.request('HEAD', 
-                      resource, 
-                      headers={'User-Agent': 'curl/7.38.0'#'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.125 Safari/537.36'}
-                               }
-                      )
             try:
+                h.request('HEAD', 
+                          resource, 
+                          headers={'User-Agent': 'curl/7.38.0'#'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.125 Safari/537.36'}
+                                   }
+                          )
                 response = h.getresponse()
             except:
-                logging.error('Timeout for url: %s'%(url))
-                raise
+                import traceback
+                traceback.print_exc()
+                return url
             logging.info('Response status: %d'%response.status)
             if response.status/100 == 3 and response.getheader('Location'):
                 red_url = response.getheader('Location')
